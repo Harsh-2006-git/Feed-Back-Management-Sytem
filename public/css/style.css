@@ -1,0 +1,48 @@
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f8f9fa;
+}
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+  border-radius: 4px;
+}
+
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for ratings */
+.rating-stars {
+  color: #ffc107;
+}
+
+/* Admin dashboard stats */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-info {
+  border: none;
+  border-radius: 10px;
+}
+
+/* Form styling */
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Home page styling */
+.display-5 {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}

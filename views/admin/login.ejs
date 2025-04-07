@@ -1,0 +1,58 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <div class="card shadow">
+        <div class="card-body">
+          <h1 class="text-center mb-4">Admin Login</h1>
+
+          <% if(error && error.length) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+          <% } %> <% if(success && success.length) { %>
+          <div class="alert alert-success" role="alert"><%= success %></div>
+          <% } %>
+
+          <form
+            action="/admin/login"
+            method="POST"
+            class="validated-form"
+            novalidate
+          >
+            <div class="mb-3">
+              <label class="form-label" for="username">Username</label>
+              <input
+                class="form-control"
+                type="text"
+                id="username"
+                name="username"
+                autofocus
+                required
+              />
+              <div class="invalid-feedback">Please enter your username</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="password">Password</label>
+              <input
+                class="form-control"
+                type="password"
+                id="password"
+                name="password"
+                required
+              />
+              <div class="invalid-feedback">Please enter your password</div>
+            </div>
+
+            <div class="d-grid">
+              <button class="btn btn-primary">Login</button>
+            </div>
+          </form>
+
+          <div class="mt-3 text-center">
+            <a href="/" class="text-decoration-none">Return to Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

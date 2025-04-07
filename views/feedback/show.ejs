@@ -1,0 +1,37 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <div class="card mb-3 shadow">
+      <div class="card-header">
+        <h3><%= feedback.title %></h3>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Rating: <%= feedback.rating %>/5</h5>
+        <p class="card-text"><%= feedback.description %></p>
+        <div class="d-flex justify-content-between">
+          <small class="text-muted"
+            >Submitted by: <%= feedback.author.username %></small
+          >
+          <small class="text-muted"
+            ><%= feedback.createdAt.toLocaleDateString() %></small
+          >
+        </div>
+        <% if(currentUser && (feedback.author.equals(currentUser._id) ||
+        currentUser.isAdmin)) { %>
+        <div class="mt-4">
+          <form
+            action="/feedback/<%= feedback._id %>?_method=DELETE"
+            method="POST"
+          >
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <a href="/feedback" class="btn btn-info">Back to All Feedback</a>
+    </div>
+  </div>
+</div>
