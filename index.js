@@ -1,8 +1,6 @@
 if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
-
-
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -17,6 +15,7 @@ const ejsMate = require("ejs-mate"); // For layout functionality
 
 const User = require("./models/user.js");
 const Feedback = require("./models/feedback.js");
+const LiveURL = process.env.MONGODB_URI;
 
 // EJS configuration
 app.engine("ejs", ejsMate);
@@ -90,16 +89,25 @@ app.get("/", (req, res) => {
 
 async function main() {
   try {
-    mongoose.connect(process.env.MONGODB_URI, {
-     useNewUrlParser: true,
-     useUnifiedTopology: true
-});
+    await mongoose.connect(LiveURL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+    });
     console.log("✅ Database connected successfully");
   } catch (err) {
-    console.error("❌ Database connection failed:", err);
+    console.error("❌ Database connection failed:", err.message);
+    // More specific error handling
+    if (err.name === "MongoServerError" && err.code === 8000) {
+      console.error("Authentication failed. Please check:");
+      console.error("- Database username/password in .env");
+      console.error("- IP whitelist in Atlas");
+      console.error("- Database name in connection string");
+    }
     process.exit(1);
   }
 }
+
 main();
 
 const PORT = 8080;
