@@ -1,0 +1,454 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Dark Mode Toggle Script -->
+<script>
+  // Function to toggle dark mode
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    localStorage.setItem("darkMode", isDarkMode);
+
+    // Update button text and icon
+    const toggleBtn = document.getElementById("darkModeToggle");
+    toggleBtn.innerHTML = isDarkMode
+      ? '<i class="bi bi-sun-fill"></i>'
+      : '<i class="bi bi-moon-fill"></i>';
+    toggleBtn.setAttribute(
+      "title",
+      isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+    );
+  }
+
+  // Check for saved preference when page loads
+  document.addEventListener("DOMContentLoaded", () => {
+    const prefersDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    const savedMode = localStorage.getItem("darkMode");
+
+    if (savedMode === "true" || (savedMode === null && prefersDarkMode)) {
+      document.body.classList.add("dark-mode");
+      const toggleBtn = document.getElementById("darkModeToggle");
+      if (toggleBtn) {
+        toggleBtn.innerHTML = '<i class="bi bi-sun-fill"></i>';
+        toggleBtn.setAttribute("title", "Switch to Light Mode");
+      }
+    }
+
+    // Run animations on page load
+    setTimeout(() => {
+      document.querySelector(".welcome-card").classList.add("show");
+
+      const buttons = document.querySelectorAll(".action-btn");
+      buttons.forEach((btn, index) => {
+        setTimeout(() => {
+          btn.classList.add("show");
+        }, 200 + index * 150);
+      });
+    }, 100);
+  });
+</script>
+
+<!-- Custom CSS for styling and dark mode -->
+<style>
+  /* Base Styles */
+  body {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .welcome-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .welcome-card {
+    border-radius: 1.5rem;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    transform: translateY(20px);
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  .welcome-card.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .card-body {
+    padding: 3rem 2rem;
+  }
+
+  .welcome-title {
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #4f46e5, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: #6b7280;
+    font-weight: 400;
+  }
+
+  hr.divider {
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(79, 70, 229, 0.5),
+      transparent
+    );
+    border: none;
+    margin: 2rem auto;
+    width: 50%;
+    opacity: 0.5;
+  }
+
+  /* Button Styles */
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .action-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .action-btn.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* User Login Button */
+  .btn-user-login {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    color: white;
+  }
+
+  .btn-user-login:hover {
+    box-shadow: 0 10px 15px rgba(79, 70, 229, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* User Register Button */
+  .btn-user-register {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    color: white;
+  }
+
+  .btn-user-register:hover {
+    box-shadow: 0 10px 15px rgba(139, 92, 246, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* Admin Login Button */
+  .btn-admin-login {
+    background: linear-gradient(135deg, #8b5cf6, #d946ef);
+    border: none;
+    color: white;
+  }
+
+  .btn-admin-login:hover {
+    box-shadow: 0 10px 15px rgba(217, 70, 239, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* View Feedback Button */
+  .btn-view-feedback {
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    border: none;
+    color: white;
+    width: 200px;
+  }
+
+  .btn-view-feedback:hover {
+    box-shadow: 0 10px 15px rgba(79, 70, 229, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* Button hover effect */
+  .action-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: all 0.5s ease;
+    z-index: -1;
+  }
+
+  .action-btn:hover::before {
+    left: 100%;
+  }
+
+  /* Dark Mode Toggle Button */
+  .dark-mode-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .dark-mode-toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-top: 2.4rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    color: #4f46e5;
+    border: 2px solid rgba(79, 70, 229, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark-mode-toggle:hover {
+    transform: rotate(15deg);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Dark Mode Styles */
+  body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .welcome-card {
+    background-color: #1e1e1e;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  body.dark-mode .welcome-title {
+    background: linear-gradient(45deg, #8b5cf6, #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  body.dark-mode .lead {
+    color: #9ca3af;
+  }
+
+  body.dark-mode hr.divider {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(139, 92, 246, 0.5),
+      transparent
+    );
+  }
+
+  body.dark-mode .dark-mode-toggle {
+    background-color: #2d3748;
+    color: #ffc107;
+    border: 2px solid rgba(255, 193, 7, 0.2);
+  }
+
+  /* Decorative elements */
+  .decorative-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    z-index: -1;
+    opacity: 0.5;
+  }
+
+  .shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+    background: radial-gradient(
+      circle,
+      rgba(79, 70, 229, 0.4) 0%,
+      rgba(79, 70, 229, 0) 70%
+    );
+  }
+
+  .shape-2 {
+    width: 250px;
+    height: 250px;
+    bottom: -50px;
+    right: -50px;
+    background: radial-gradient(
+      circle,
+      rgba(139, 92, 246, 0.4) 0%,
+      rgba(139, 92, 246, 0) 70%
+    );
+  }
+
+  body.dark-mode .shape-1 {
+    background: radial-gradient(
+      circle,
+      rgba(139, 92, 246, 0.3) 0%,
+      rgba(139, 92, 246, 0) 70%
+    );
+  }
+
+  body.dark-mode .shape-2 {
+    background: radial-gradient(
+      circle,
+      rgba(217, 70, 239, 0.3) 0%,
+      rgba(217, 70, 239, 0) 70%
+    );
+  }
+
+  /* Logo Animation */
+  .logo-container {
+    margin-bottom: 2rem;
+  }
+
+  .feedback-logo {
+    font-size: 3rem;
+    animation: pulse 2s infinite alternate ease-in-out;
+    color: #4f46e5;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.1);
+    }
+  }
+
+  body.dark-mode .feedback-logo {
+    color: #8b5cf6;
+  }
+</style>
+
+<!-- Dark Mode Toggle Button (Top Right) -->
+<div class="dark-mode-toggle-container">
+  <button
+    id="darkModeToggle"
+    onclick="toggleDarkMode()"
+    class="dark-mode-toggle gap"
+    title="Switch to Dark Mode"
+  >
+    <i class="bi bi-moon-fill"></i>
+  </button>
+</div>
+
+<!-- Decorative Shapes -->
+<div class="decorative-shape shape-1"></div>
+<div class="decorative-shape shape-2"></div>
+
+<div class="container welcome-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 position-relative">
+      <div class="welcome-card">
+        <div class="card-body text-center">
+          <!-- Logo -->
+          <div class="logo-container">
+            <i class="bi bi-chat-square-text-fill feedback-logo"></i>
+          </div>
+
+          <!-- Welcome Text -->
+          <h1 class="display-4 welcome-title">Welcome to Feedback System</h1>
+          <p class="lead">
+            A modern platform for collecting, analyzing, and managing user
+            feedback to improve your products and services
+          </p>
+
+          <hr class="divider my-4" />
+
+          <!-- Action Buttons -->
+          <div class="btn-container">
+            <% if(!currentUser) { %>
+            <a href="/login" class="btn action-btn btn-user-login">
+              <i class="bi bi-box-arrow-in-right me-2"></i>User Login
+            </a>
+            <a href="/register" class="btn action-btn btn-user-register">
+              <i class="bi bi-person-plus me-2"></i>User Register
+            </a>
+            <a href="/admin/login" class="btn action-btn btn-admin-login">
+              <i class="bi bi-shield-lock me-2"></i>Admin Login
+            </a>
+            <% } else { %>
+            <a href="/feedback" class="btn action-btn btn-view-feedback">
+              <i class="bi bi-chat-quote me-2"></i>View Feedback
+            </a>
+            <a href="/feedback/new" class="btn action-btn btn-user-register">
+              <i class="bi bi-plus-circle me-2"></i>New Feedback
+            </a>
+            <% } %>
+          </div>
+
+          <!-- Features Preview -->
+          <div class="row mt-5">
+            <div class="col-md-4">
+              <div class="feature-item">
+                <i
+                  class="bi bi-chat-dots-fill mb-3 text-primary"
+                  style="font-size: 2rem"
+                ></i>
+                <h5>Share Feedback</h5>
+                <p class="text-muted small">
+                  Submit your thoughts and suggestions easily
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="feature-item">
+                <i
+                  class="bi bi-graph-up mb-3 text-primary"
+                  style="font-size: 2rem"
+                ></i>
+                <h5>Track Progress</h5>
+                <p class="text-muted small">
+                  Monitor the status of your submissions
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="feature-item">
+                <i
+                  class="bi bi-people-fill mb-3 text-primary"
+                  style="font-size: 2rem"
+                ></i>
+                <h5>Connect</h5>
+                <p class="text-muted small">
+                  Join a community focused on improvement
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
