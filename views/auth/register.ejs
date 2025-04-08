@@ -1,54 +1,394 @@
 <% layout('layouts/boilerplate') %>
 
-<div class="row">
-  <div class="col-md-6 offset-md-3">
-    <div class="card shadow">
-      <div class="card-body">
-        <h1 class="text-center mb-4">Register</h1>
-        <form
-          action="/register"
-          method="POST"
-          class="validated-form"
-          novalidate
-        >
-          <div class="mb-3">
-            <label class="form-label" for="username">Username</label>
-            <input
-              class="form-control"
-              type="text"
-              id="username"
-              name="username"
-              required
-            />
+<!-- Dark Mode Toggle Script -->
+<script>
+  // Function to toggle dark mode
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    localStorage.setItem("darkMode", isDarkMode);
+
+    // Update button text and icon
+    const toggleBtn = document.getElementById("darkModeToggle");
+    toggleBtn.innerHTML = isDarkMode
+      ? '<i class="bi bi-sun-fill"></i>'
+      : '<i class="bi bi-moon-fill"></i>';
+    toggleBtn.setAttribute(
+      "title",
+      isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+    );
+  }
+
+  // Check for saved preference when page loads
+  document.addEventListener("DOMContentLoaded", () => {
+    const prefersDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    const savedMode = localStorage.getItem("darkMode");
+
+    if (savedMode === "true" || (savedMode === null && prefersDarkMode)) {
+      document.body.classList.add("dark-mode");
+      const toggleBtn = document.getElementById("darkModeToggle");
+      if (toggleBtn) {
+        toggleBtn.innerHTML = '<i class="bi bi-sun-fill"></i>';
+        toggleBtn.setAttribute("title", "Switch to Light Mode");
+      }
+    }
+  });
+</script>
+
+<!-- Custom CSS for styling and dark mode -->
+<style>
+  .register-card {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .register-header {
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease;
+  }
+
+  .form-control:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+  }
+
+  .btn-register {
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+    transition: all 0.3s ease;
+  }
+
+  .btn-register:hover {
+    background-color: #4338ca;
+    border-color: #4338ca;
+    transform: translateY(-2px);
+  }
+
+  .login-link {
+    color: #4f46e5;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .login-link:hover {
+    color: #4338ca;
+    text-decoration: underline;
+  }
+
+  .register-container {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Password strength indicator */
+  .password-strength {
+    height: 5px;
+    margin-top: 5px;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  /* Dark Mode Toggle Button */
+  .dark-mode-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f8f9fa;
+    color: #6c757d;
+  }
+
+  /* Dark Mode Styles */
+  body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .register-card {
+    background-color: #1e1e1e;
+    border-color: #333;
+  }
+
+  body.dark-mode .register-header {
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .form-control {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+  }
+
+  body.dark-mode .btn-register {
+    background-color: #5145cd;
+    border-color: #5145cd;
+  }
+
+  body.dark-mode .btn-register:hover {
+    background-color: #4338ca;
+    border-color: #4338ca;
+  }
+
+  body.dark-mode .login-link {
+    color: #667eea;
+  }
+
+  body.dark-mode .login-link:hover {
+    color: #7f9cf5;
+  }
+
+  body.dark-mode .dark-mode-toggle {
+    background-color: #2d3748;
+    color: #ffc107;
+  }
+
+  body.dark-mode .text-muted {
+    color: #9ca3af !important;
+  }
+
+  /* Form validation styles */
+  .was-validated .form-control:invalid {
+    border-color: #dc3545;
+  }
+
+  .was-validated .form-control:valid {
+    border-color: #198754;
+  }
+
+  body.dark-mode .was-validated .form-control:invalid {
+    border-color: #f87171;
+  }
+
+  body.dark-mode .was-validated .form-control:valid {
+    border-color: #34d399;
+  }
+  /* Make placeholder text visible in dark mode */
+  body.dark-mode .form-control::placeholder {
+    color: #eff1f5; /* Light gray color for better visibility in dark mode */
+    opacity: 0.7;
+  }
+
+  /* Standard placeholder styling for light mode */
+  .form-control::placeholder {
+    color: #f7f9fc;
+    opacity: 0.7;
+  }
+</style>
+
+<div class="container register-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7 col-sm-10">
+      <div class="card register-card">
+        <div class="card-body p-4 p-md-5">
+          <h1 class="register-header text-center">
+            <i class="bi bi-person-plus me-2"></i>Register
+          </h1>
+
+          <form
+            action="/register"
+            method="POST"
+            class="validated-form"
+            novalidate
+          >
+            <div class="mb-4">
+              <label class="form-label" for="username">
+                <i class="bi bi-person me-2"></i>Username
+              </label>
+              <input
+                class="form-control"
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Choose a username"
+                required
+              />
+              <div class="invalid-feedback">Please choose a username</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label" for="email">
+                <i class="bi bi-envelope me-2"></i>Email
+              </label>
+              <input
+                class="form-control"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+              <div class="invalid-feedback">
+                Please enter a valid email address
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label" for="password">
+                <i class="bi bi-lock me-2"></i>Password
+              </label>
+              <input
+                class="form-control"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create a password"
+                required
+                oninput="checkPasswordStrength(this.value)"
+              />
+              <div
+                class="password-strength w-100 bg-light"
+                id="passwordStrength"
+              ></div>
+              <small id="passwordHelpBlock" class="form-text text-muted mt-2">
+                Your password should be at least 8 characters long and include
+                letters, numbers, and special characters.
+              </small>
+              <div class="invalid-feedback">Please create a password</div>
+            </div>
+
+            <div class="mb-4 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="termsCheck"
+                required
+              />
+              <label class="form-check-label" for="termsCheck">
+                I agree to the
+                <a href="#" class="login-link">Terms and Conditions</a>
+              </label>
+              <div class="invalid-feedback">
+                You must agree before submitting
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary btn-register">
+                <i class="bi bi-person-plus me-2"></i>Create Account
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-4 text-center">
+            <p class="mb-0">
+              Already have an account?
+              <a href="/login" class="login-link">Login here</a>
+            </p>
           </div>
-          <div class="mb-3">
-            <label class="form-label" for="email">Email</label>
-            <input
-              class="form-control"
-              type="email"
-              id="email"
-              name="email"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input
-              class="form-control"
-              type="password"
-              id="password"
-              name="password"
-              required
-            />
-          </div>
-          <div class="d-grid">
-            <button class="btn btn-success">Register</button>
-          </div>
-        </form>
-        <div class="mt-3 text-center">
-          <p>Already have an account? <a href="/login">Login here</a></p>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Dark Mode Toggle Button -->
+  <button
+    id="darkModeToggle"
+    onclick="toggleDarkMode()"
+    class="btn btn-primary dark-mode-toggle"
+    title="Switch to Dark Mode"
+  >
+    <i class="bi bi-moon-fill"></i>
+  </button>
 </div>
+
+<!-- Bootstrap Form Validation Script -->
+<script>
+  (function () {
+    "use strict";
+
+    // Fetch all forms that need validation
+    const forms = document.querySelectorAll(".validated-form");
+
+    // Loop over them and prevent submission
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+
+  // Simple password strength checker
+  function checkPasswordStrength(password) {
+    const strengthBar = document.getElementById("passwordStrength");
+    let strength = 0;
+
+    if (password.length >= 8) strength += 1;
+    if (password.match(/[a-z]+/)) strength += 1;
+    if (password.match(/[A-Z]+/)) strength += 1;
+    if (password.match(/[0-9]+/)) strength += 1;
+    if (password.match(/[^a-zA-Z0-9]+/)) strength += 1;
+
+    switch (strength) {
+      case 0:
+        strengthBar.style.width = "0%";
+        strengthBar.className = "password-strength w-0 bg-light";
+        break;
+      case 1:
+        strengthBar.style.width = "20%";
+        strengthBar.className = "password-strength w-20 bg-danger";
+        break;
+      case 2:
+        strengthBar.style.width = "40%";
+        strengthBar.className = "password-strength w-40 bg-warning";
+        break;
+      case 3:
+        strengthBar.style.width = "60%";
+        strengthBar.className = "password-strength w-60 bg-info";
+        break;
+      case 4:
+        strengthBar.style.width = "80%";
+        strengthBar.className = "password-strength w-80 bg-primary";
+        break;
+      case 5:
+        strengthBar.style.width = "100%";
+        strengthBar.className = "password-strength w-100 bg-success";
+        break;
+    }
+  }
+</script>
